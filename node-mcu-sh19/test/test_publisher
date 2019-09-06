@@ -1,0 +1,43 @@
+#include <Arduino.h>
+#include "wifiSH.h"
+#include "publisherSH.h"
+#include <ESP8266WiFi.h>
+
+#ifndef PLATFORM_HOST
+  #define USER "username"
+  #define PLATFORM_HOST "http://192.168.63.237"
+  #define PLATFORM_PORT 5001
+  #define MQTT_HOST "http://locahost"
+  #define MQTT_PORT 1883
+#endif
+
+char *uuid = "33af2283-11c3-40c4-9468-2d2e1e1d4660";
+char endpoint[80];    // Endpoint IP/Port 
+
+
+// Sensor waterFlowSensor = Sensor();
+PublisherSH waterFlowPublisher = PublisherSH();
+
+void setup()
+{
+  Serial.begin(115200);
+
+  // Connect to Wifi Network 
+  connect2Wifi();
+  sprintf(endpoint, "http://%s:%i/api/", PLATFORM_HOST, PLATFORM_PORT);
+  waterFlowPublisher.begin(uuid, endpoint);
+}
+
+void loop()
+{
+  if (WiFi.status() == WL_CONNECTED)
+  {
+    //uint8_t value = waterFlowSensor.measure();
+    //waterFlowPublisher.sendData(value);
+  }
+  else
+  {
+    connect2Wifi();
+  }
+  delay(4000);
+}
