@@ -34,7 +34,7 @@ void PublisherSH::setupSensorClass(uint8_t sensorId, uint8_t sensorClass)
 
     char output[128];
     serializeJson(PublisherSH::doc, output);
-
+    PublisherSH::doc = RawJson("null");
     HTTPClient http;                                    // Send the request
     http.begin(endpoint);                               // Specify request destination
     http.addHeader("Content-Type", "application/json"); // Specify content-type header
