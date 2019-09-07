@@ -19,6 +19,6 @@ class OLED
 		void initDisplay();
 	private:	
 		Adafruit_SSD1306 display(OLED_RESET);
-}
+};
 
 #endif

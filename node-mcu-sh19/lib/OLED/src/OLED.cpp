@@ -1,12 +1,10 @@
-#include <Wire.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
+#include "OLED.h"
 
 
 void OLED::initDisplay() {
   // put your setup code here, to run once:
-  Wire.begin();
-  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+  Wire.begin();  
+  this->display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
 }
 
 void OLED::SendDisplay(uint32_t water)
