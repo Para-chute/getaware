@@ -15,53 +15,35 @@ class Measurement(object):
     exposed = True
 
     @cherrypy.tools.json_out()
-    def GET(self, **params):
-        # p_startdate = parse(params['startdate'])
-        # p_enddate = parse(params['enddate'])
-
-        # print(p_startdate)
-        # print(p_enddate)
-        # print(params['device_id'])
-
-       # try:
-       #     pass
-        #            measurements = schema.Measurement.objects(
-     #               Q(time__gte=p_startdate) & Q(time__lte=p_enddate) & Q(device_id=device_id)).all()
-        # except Exception as e:
-        #   raise cherrypy.HTTPError(400, str(e))
-        self.client.switch_database('water2')
-        self.client.get_list_measurements()
-        result = self.client.query('select * from "66"')
+    def GET(self, eventalias, uuid):
+        self.client.switch_database(eventalias)
+        query = f'select * from "{uuid}"'
+        print(query)
+        result = self.client.query(query).raw
 
         return {
             "status": 200,
-            "data": result.raw
+            "data": result
         }
 
     @cherrypy.tools.json_in()
     @cherrypy.tools.json_out()
     def POST(self):
-
-        data = [
-            {
-                "measurement": cherrypy.request.json.get('deviceId'),
-                "fields": {
-                    "value": 0.64
-                }
+        self.client.switch_database(cherrypy.request.json.get('eventalias'))
+        r = self.client.write_points([{
+            "measurement": cherrypy.request.json.get('uuid'),
+            "fields": {
+                "value": cherrypy.request.json.get('value')
             }
-        ]
+        }])
 
-        # measurement = schema.Measurement()
-        # measurement.device_id = cherrypy.request.json.get('deviceId')
-        # measurement.value = cherrypy.request.json.get('value')
+        if r is True:
+            cherrypy.response.status = 200
+            return {
+                "status": 200
+            }
 
-        # self.client.write_points(json)
-        self.client.ping()
-        self.client.switch_database('water2')
-        a = self.client.write_points(data)
-
-        cherrypy.response.status = 200
+        cherrypy.response.status = 400
         return {
-            "status": 200,
-            "measurement": a
+            "status": 400,
         }

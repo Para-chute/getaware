@@ -51,6 +51,7 @@ services:
   influxdb:
     image: influxdb
     environment: 
+      - INFLUXDB_DB=test
       - INFLUXDB_ADMIN_USER=parachute
       - INFLUXDB_ADMIN_PASSWORD=hereforbeer
       - INFLUXDB_USER=red
@@ -63,3 +64,12 @@ services:
     entrypoint: 'chronograf --influxdb-url=http://influxdb:8086'
     ports:
       - "8888"
+
+  nodered:
+    image: nodered/node-red-docker
+    ports:
+      - "1880:1880"
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"

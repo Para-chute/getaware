@@ -84,3 +84,26 @@ class Groups(object):
             "status": 400,
             "message": "Couldn't detele Group"
         }
+
+    def PUT(self, eventalias, intid):
+        try:
+            event = schema.Event.objects.get(alias=eventalias)
+        except Exception as e:
+            raise cherrypy.HTTPError(404, str(e))
+
+        try:
+            group = event.device_groups.get(intid=intid)
+            if group is not None:
+                if cherrypy.request.json.get('intid') is not None:
+                    group.intid = cherrypy.request.json.get('intid')
+                if cherrypy.request.json.get('description') is not None:
+                    group.description = cherrypy.request.json.get(
+                        'description')
+            event.save()
+        except Exception as e:
+            raise cherrypy.HTTPError(404, str(e))
+
+        return {
+            "status": 200,
+            "data": json.loads(event.to_json())
+        }
