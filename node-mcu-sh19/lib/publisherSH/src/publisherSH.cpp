@@ -9,11 +9,11 @@ void PublisherSH::begin(char *uuid, char *endpoint)
     Serial.printf("\nWill publish on %s", endpoint);
 }
 
-void PublisherSH::sendData(uint8_t measurement)
+void PublisherSH::sendData(uint8_t sensorId, uint32_t measurement)
 {
+    PublisherSH::doc["deviceId"] = sensorId;
     PublisherSH::doc["value"] = measurement;
 
-    // Produce a minified JSON document
     char output[128];
     serializeJson(PublisherSH::doc, output);
 
@@ -27,4 +27,19 @@ void PublisherSH::sendData(uint8_t measurement)
     Serial.printf("\nCode %d : %s", httpCode, output);
 }
 
+void PublisherSH::setupSensorClass(uint8_t sensorId, uint8_t sensorClass)
+{
+    PublisherSH::doc["deviceId"] = sensorId;
+    PublisherSH::doc["sensorClass"] = sensorClass;
 
+    char output[128];
+    serializeJson(PublisherSH::doc, output);
+    PublisherSH::doc.remove('sensorClass');
+    HTTPClient http;                                    // Send the request
+    http.begin(endpoint);                               // Specify request destination
+    http.addHeader("Content-Type", "application/json"); // Specify content-type header
+    int httpCode = http.POST(output);                   // POST message
+    http.end();                                         // Close connection
+
+    Serial.printf("\nCode %d : %s", httpCode, output);
+}
