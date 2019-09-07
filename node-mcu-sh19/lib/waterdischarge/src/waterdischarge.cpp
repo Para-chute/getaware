@@ -8,7 +8,7 @@ Waterdischarge::Waterdischarge()
 void Waterdischarge::init(byte sensID, uint32_t loadS, byte dp)
 {
     Waterdischarge::pin = dp;
-    pinMode(pin, INPUT);
+    pinMode(pin, INPUT_PULLDOWN_16);
     Waterdischarge::load_s = loadS;
     Waterdischarge::sensorID = sensID;
 }
