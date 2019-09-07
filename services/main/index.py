@@ -5,6 +5,7 @@ import os
 
 from src.events import Events
 from src.groups import Groups
+from src.devices import Devices
 from influxdb import InfluxDBClient
 
 
@@ -36,6 +37,7 @@ if __name__ == '__main__':
     })
 
     cherrypy.tree.mount(Events(client), '/api/v1/events', conf)
-    cherrypy.tree.mount(Groups(client), '/api/v1/groups', conf)
+    cherrypy.tree.mount(Groups(), '/api/v1/groups', conf)
+    cherrypy.tree.mount(Devices(), '/api/v1/devices', conf)
     cherrypy.engine.start()
     cherrypy.engine.block()

@@ -7,8 +7,8 @@ import src.schemas as schema
 
 
 class Groups(object):
-    def __init__(self, client):
-        self.client = client
+    def __init__(self):
+        pass
 
     exposed = True
 

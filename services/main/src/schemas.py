@@ -11,7 +11,9 @@ class Measurement(gj.Document):
         required=True, precision=2, rounding='ROUND_HALF_UP')
 
 
-class Device(gj.Document):
+class Device(gj.EmbeddedDocument):
+    uuid = db.UUIDField(required=True, default=lambda: str(
+        uuid.uuid4()), binary=False)
     online = db.BooleanField(default=False)
     controller_type = db.StringField()
     created_at = db.DateTimeField(default=datetime.datetime.utcnow)
@@ -21,7 +23,7 @@ class Device(gj.Document):
 class Group(gj.EmbeddedDocument):
     intid = db.IntField(required=True, unique=True)
     description = db.StringField(required=True)
-    devices = db.ListField(db.ReferenceField('Device'))
+    devices = db.EmbeddedDocumentListField('Device')
 
 
 class Event(gj.Document):
