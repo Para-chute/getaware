@@ -4,10 +4,15 @@ import json
 import os
 
 from src.measurement import Measurement
+from influxdb import InfluxDBClient
 
-connect("measurements", host="mongodb://" + os.environ.get('DATABASE_USERNAME') +
-        ":" + os.environ.get('DATABASE_PASSWORD') +
-        "@db:" + str(27017) + '/?authSource=admin')
+# connect("measurements", host="mongodb://" + os.environ.get('DATABASE_USERNAME') +
+#        ":" + os.environ.get('DATABASE_PASSWORD') +
+#        "@db:" + str(27017) + '/?authSource=admin')
+
+client = InfluxDBClient(host='influxdb', port=8086)
+# client.create_database('water1')
+# client.create_database('water2')
 
 
 def json_error(status, message, traceback, version):
@@ -30,6 +35,6 @@ if __name__ == '__main__':
         'server.socket_port': 5000
     })
 
-    cherrypy.tree.mount(Measurement(), '/', conf)
+    cherrypy.tree.mount(Measurement(client), '/api/v1/measurements', conf)
     cherrypy.engine.start()
     cherrypy.engine.block()
