@@ -5,22 +5,25 @@ Waterdischarge::Waterdischarge()
 {
 }
 
-void Waterdischarge::init(byte dp)
+void Waterdischarge::init(byte sensID, uint32_t loadS, byte dp)
 {
     Waterdischarge::pin = dp;
     pinMode(pin, INPUT);
-    Waterdischarge::data = 0;
+    Waterdischarge::load_s = loadS;
+    Waterdischarge::sensorID = sensID;
 }
 
-int Waterdischarge::discharge()
+uint32_t Waterdischarge::discharge()
+{    
+    return Waterdischarge::load_s;
+}
+
+uint8_t Waterdischarge::get_sensID()
 {
-    if (digitalRead(pin))
-    {
-        Waterdischarge::data = 20;
-    }
-    else
-    {
-        Waterdischarge::data = 0;
-    }
-    return Waterdischarge::data;
+    return this->sensorID;
+}
+
+uint8_t Waterdischarge::get_classID()
+{
+    return this->classID;
 }
