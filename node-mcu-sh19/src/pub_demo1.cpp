@@ -20,7 +20,9 @@
 // ANALOG INITS
 #define WATERFLOWADC_PIN A0 // ADC read pin
 #define WATERDISCHARGEDIG_PIN D8
-#define CLASSID_PIN D3
+#define CLASSID_PIN D7
+
+uint8_t classID;
 
 Waterflow waterflowS = Waterflow();
 Waterdischarge waterdischargeS = Waterdischarge();
@@ -45,7 +47,7 @@ PublisherSH flowPub = PublisherSH();
 uint32_t timePerUtilization = 60000;
 unsigned long previousT, currentT;
 
-#define DIS_LOAD_S 10
+#define DIS_LOAD_S 5000
 
 void setup()
 {
@@ -55,20 +57,22 @@ void setup()
     sprintf(endpoint, "http://%s:%i/", PLATFORM_HOST, 5001);
     flowPub.begin(uuid, endpoint);
 
-    pinMode(CLASSID_PIN, INPUT);
+    pinMode(CLASSID_PIN, INPUT_PULLDOWN_16);
+    classID = digitalRead(CLASSID_PIN);
+    Serial.println(classID);
 
-    switch (digitalRead(CLASSID_PIN))
+    switch (classID)
     {
     case 0:         //Waterflow
         waterflowS.init(sensID, WATERFLOWADC_PIN);
         flowPub.setupSensorClass(waterflowS.get_sensID(), waterflowS.get_classID()); // Initial send: warn that unit $(sensorID) is measuring $(classID)
-        Serial.println("Waterflow");
+        Serial.println("Waterflow is on");
         break;
     
     case 1:         //Waterdischarge
         waterdischargeS.init(sensID, DIS_LOAD_S, WATERDISCHARGEDIG_PIN);
         flowPub.setupSensorClass(waterdischargeS.get_sensID(), waterdischargeS.get_classID()); // Initial send: warn that unit $(sensorID) is measuring $(classID)
-        Serial.println("Waterdischarge");
+        Serial.println("Waterdischarge is on");
         break;
 
     default:
@@ -76,16 +80,13 @@ void setup()
     }
 
     initDisplay();
-
-    Serial.println("\nWaterflow sensor is online");
 }
+
 void loop() {
 
-    switch (digitalRead(CLASSID_PIN))
-    {
+    switch (classID) {
     case 0:         //Waterflow
-        while (1)
-        {
+        while (1) {
             delay(500);
             measure = waterflowS.return_data();
 
@@ -99,34 +100,30 @@ void loop() {
                 total += measure;
                 SendDisplay(total);
                 measure = waterflowS.return_data();
-                Serial.println(total);
                 delay(200);
                 }
 
                 ClearDisplay();
-                flowPub.sendData(waterflowS.get_sensID(), total);                
+                flowPub.sendData(waterflowS.get_sensID(), total);
             }
         }
         break;
     
     case 1:         //Waterdischarge
-        while (1)
-        {
+        while (1) {
             if(digitalRead(WATERDISCHARGEDIG_PIN)) {
                 total = waterdischargeS.discharge();
-                SendDisplay(total);
-                ClearDisplay();
+                SendDisplay(total);        
                 flowPub.sendData(waterdischargeS.get_sensID(), total);
-                delay(1000);
+                delay(3000);
+                total = 0;
+                ClearDisplay();
             }
-            total = 0;
+            delay(200);
         }
-        
         break;
 
     default:
         break;
     }
-
-  
 }

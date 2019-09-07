@@ -37,7 +37,7 @@ char endpoint[80];
 PublisherSH flowPub = PublisherSH();
 
 // OTHER INITS
-#define DIS_LOAD_S 10
+#define DIS_LOAD_S 4000
 
 void setup()
 {
