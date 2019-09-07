@@ -9,11 +9,11 @@ void PublisherSH::begin(char *uuid, char *endpoint)
     Serial.printf("\nWill publish on %s", endpoint);
 }
 
-void PublisherSH::sendData(uint8_t measurement)
+void PublisherSH::sendData(uint8_t sensorId, uint32_t measurement)
 {
+    PublisherSH::doc["sensorId"] = sensorId;
     PublisherSH::doc["value"] = measurement;
 
-    // Produce a minified JSON document
     char output[128];
     serializeJson(PublisherSH::doc, output);
 

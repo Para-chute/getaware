@@ -13,7 +13,7 @@ class PublisherSH
 
 public:
     void begin(char *uuid, char *endpoint);
-    void sendData(uint8_t measurement);
+    void sendData(uint8_t sensorId, uint32_t measurement);
 private:
     StaticJsonDocument<capacity> doc;
     char *endpoint;
