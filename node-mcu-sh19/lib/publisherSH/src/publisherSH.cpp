@@ -11,7 +11,7 @@ void PublisherSH::begin(char *uuid, char *endpoint)
 
 void PublisherSH::sendData(uint8_t sensorId, uint32_t measurement)
 {
-    PublisherSH::doc["sensorId"] = sensorId;
+    PublisherSH::doc["deviceId"] = sensorId;
     PublisherSH::doc["value"] = measurement;
 
     char output[128];
@@ -29,7 +29,7 @@ void PublisherSH::sendData(uint8_t sensorId, uint32_t measurement)
 
 void PublisherSH::setupSensorClass(uint8_t sensorId, uint8_t sensorClass)
 {
-    PublisherSH::doc["sensorId"] = sensorId;
+    PublisherSH::doc["deviceId"] = sensorId;
     PublisherSH::doc["sensorClass"] = sensorClass;
 
     char output[128];
