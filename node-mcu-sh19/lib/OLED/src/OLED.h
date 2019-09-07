@@ -7,18 +7,14 @@
 
 #define OLED_RESET 13
 
-class OLED 
-{
-	public:
-		//Select the cup level
-		void SelectCupSize(uint32_t pos,uint32_t restante);
+//Select the cup level
+void SelectCupSize(uint32_t pos, uint32_t restante);
 
-		//Send to the display (Cups animation, Liters and total cups)
-		void SendDisplay(uint32_t water);
-		void ClearDisplay();
-		void initDisplay();
-	private:	
-		Adafruit_SSD1306 display(OLED_RESET);
-};
+//Send to the display (Cups animation, Liters and total cups)
+void SendDisplay(uint32_t water);
+void ClearDisplay();
+void initDisplay();
+
+//Adafruit_SSD1306 display(OLED_RESET);
 
 #endif
