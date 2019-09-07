@@ -27,4 +27,19 @@ void PublisherSH::sendData(uint8_t sensorId, uint32_t measurement)
     Serial.printf("\nCode %d : %s", httpCode, output);
 }
 
+void PublisherSH::setupSensorClass(uint8_t sensorId, uint8_t sensorClass)
+{
+    PublisherSH::doc["sensorId"] = sensorId;
+    PublisherSH::doc["sensorClass"] = sensorClass;
 
+    char output[128];
+    serializeJson(PublisherSH::doc, output);
+
+    HTTPClient http;                                    // Send the request
+    http.begin(endpoint);                               // Specify request destination
+    http.addHeader("Content-Type", "application/json"); // Specify content-type header
+    int httpCode = http.POST(output);                   // POST message
+    http.end();                                         // Close connection
+
+    Serial.printf("\nCode %d : %s", httpCode, output);
+}
