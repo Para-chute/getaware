@@ -6,7 +6,7 @@
 #include <ESP8266HTTPClient.h>
 
 
-const size_t capacity = JSON_OBJECT_SIZE(2);
+const size_t capacity = JSON_OBJECT_SIZE(3+70);
 
 class PublisherSH
 {

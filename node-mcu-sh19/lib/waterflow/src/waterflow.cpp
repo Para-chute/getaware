@@ -5,9 +5,9 @@ Waterflow::Waterflow()
 {
 }
 
-void Waterflow::init(byte anp)
+void Waterflow::init(byte sensID, byte anp)
 {
-
+    Waterflow::sensorID = sensID;
     Waterflow::pin = anp;
 
     pinMode(pin, INPUT);
@@ -25,4 +25,14 @@ int Waterflow::return_data()
 {
     Waterflow::update_data();
     return Waterflow::data;
+}
+
+uint8_t Waterflow::get_sensID()
+{
+    return this->sensorID;
+}
+
+uint8_t Waterflow::get_classID()
+{
+    return this->classID;
 }
