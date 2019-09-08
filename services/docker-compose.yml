@@ -48,6 +48,8 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=hereforbeer
     ports:
       - "27017:27017"
+    volumes:
+      - /data/mongo:/data/db
   influxdb:
     image: influxdb
     environment: 
@@ -59,6 +61,8 @@ services:
       - INFLUXDB_ADMIN_ENABLED=true
     ports:
       - "8086"
+    volumes:
+      - /data/influxdb:/var/lib/influxdb
   chronograf:
     image: chronograf:latest
     entrypoint: 'chronograf --influxdb-url=http://influxdb:8086'
