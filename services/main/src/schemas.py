@@ -11,32 +11,26 @@ class Measurement(gj.Document):
         required=True, precision=2, rounding='ROUND_HALF_UP')
 
 
-class Device(gj.Document):
+class Device(gj.EmbeddedDocument):
+    uuid = db.UUIDField(required=True, default=lambda: str(
+        uuid.uuid4()), binary=False)
     online = db.BooleanField(default=False)
     controller_type = db.StringField()
     created_at = db.DateTimeField(default=datetime.datetime.utcnow)
     last_update = db.DateTimeField(default=datetime.datetime.utcnow)
 
 
-class Statistics(gj.EmbeddedDocument):
-    last_updated = db.DateTimeField(default=datetime.datetime.utcnow)
-    total = db.DecimalField(default=0)
-    mean_hour = db.DecimalField(default=0)
-    mean_usage = db.DecimalField(default=0)
-
-
 class Group(gj.EmbeddedDocument):
-    intid = db.IntField()
+    intid = db.IntField(required=True, unique=True)
     description = db.StringField(required=True)
-    statistics = db.EmbeddedDocumentField('Statistics')
-    devices = db.ListField(db.ReferenceField('Device'))
+    devices = db.EmbeddedDocumentListField('Device')
 
 
 class Event(gj.Document):
-    name = db.StringField(required=True)
+    name = db.StringField(required=True, unique=True)
+    alias = db.StringField(required=True, unique=True)
     created_at = db.DateTimeField(default=datetime.datetime.utcnow)
     updated_at = db.DateTimeField(default=datetime.datetime.utcnow)
     begin_date = db.DateTimeField()
     end_date = db.DateTimeField()
-    statistics_total = db.EmbeddedDocumentField('Statistics')
     device_groups = db.EmbeddedDocumentListField('Group')

@@ -9,10 +9,11 @@ void PublisherSH::begin(char *uuid, char *endpoint)
     Serial.printf("\nWill publish on %s", endpoint);
 }
 
-void PublisherSH::sendData(uint8_t sensorId, uint32_t measurement)
+void PublisherSH::sendData(char *uuid, uint32_t measurement, char *eventalias)
 {
-    PublisherSH::doc["deviceId"] = sensorId;
+    PublisherSH::doc["uuid"] = uuid;
     PublisherSH::doc["value"] = measurement;
+    PublisherSH::doc["eventalias"] = eventalias;
 
     char output[128];
     serializeJson(PublisherSH::doc, output);
@@ -27,10 +28,11 @@ void PublisherSH::sendData(uint8_t sensorId, uint32_t measurement)
     Serial.printf("\nCode %d : %s", httpCode, output);
 }
 
-void PublisherSH::setupSensorClass(uint8_t sensorId, uint8_t sensorClass)
+void PublisherSH::setupSensorClass(char *uuid, uint8_t sensorClass, char *eventalias)
 {
-    PublisherSH::doc["deviceId"] = sensorId;
+    PublisherSH::doc["uuid"] = uuid;
     PublisherSH::doc["sensorClass"] = sensorClass;
+    PublisherSH::doc["eventalias"] = eventalias;
 
     char output[128];
     serializeJson(PublisherSH::doc, output);

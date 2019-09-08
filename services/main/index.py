@@ -3,16 +3,17 @@ from mongoengine import connect
 import json
 import os
 
-from src.measurement import Measurement
+from src.events import Events
+from src.groups import Groups
+from src.devices import Devices
 from influxdb import InfluxDBClient
 
-# connect("measurements", host="mongodb://" + os.environ.get('DATABASE_USERNAME') +
-#        ":" + os.environ.get('DATABASE_PASSWORD') +
-#        "@db:" + str(27017) + '/?authSource=admin')
+
+connect("main", host="mongodb://" + os.environ.get('DATABASE_USERNAME') +
+        ":" + os.environ.get('DATABASE_PASSWORD') +
+        "@db:" + str(27017) + '/?authSource=admin')
 
 client = InfluxDBClient(host='influxdb', port=8086)
-# client.create_database('water1')
-# client.create_database('water2')
 
 
 def json_error(status, message, traceback, version):
@@ -35,6 +36,8 @@ if __name__ == '__main__':
         'server.socket_port': 5000
     })
 
-    cherrypy.tree.mount(Measurement(client), '/api/v1/measurements', conf)
+    cherrypy.tree.mount(Events(client), '/api/v1/events', conf)
+    cherrypy.tree.mount(Groups(), '/api/v1/groups', conf)
+    cherrypy.tree.mount(Devices(), '/api/v1/devices', conf)
     cherrypy.engine.start()
     cherrypy.engine.block()
