@@ -57,7 +57,7 @@ void setup()
     sprintf(endpoint, "http://%s:%i/", PLATFORM_HOST, 5001);
     flowPub.begin(uuid, endpoint);
 
-    pinMode(CLASSID_PIN, INPUT_PULLDOWN_16);
+    pinMode(CLASSID_PIN, INPUT);
     classID = digitalRead(CLASSID_PIN);
     Serial.println(classID);
 
